@@ -26,14 +26,21 @@ public class LZWCompressionGUI extends Application {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
+        // Back btn
+        Button backBtn = createIconButton(48, 58, "back.png");
+        backBtn.setCursor(Cursor.HAND);
+        backBtn.setStyle("-fx-background-color: transparent;-fx-padding: 20 0 30 50;");
+
         Label headerLabel = new Label("LZW Compression");
-        headerLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 30px; -fx-padding: 20 0 30 0;");
+        headerLabel.setStyle("-fx-font-family: 'Comic Sans MS';-fx-font-weight: bold;-fx-font-size: 35px; -fx-padding: 0 0 20 0;");
         selectedFilePathField = new TextField();
         selectedFilePathField.setPrefWidth(450);
         selectedFilePathField.setEditable(false);
 
-        Button selectFileButton = createIconButton(30, 30);
+        Button selectFileButton = createIconButton(30, 30, "folder.png");
         selectFileButton.setCursor(Cursor.HAND);
+        selectFileButton.setStyle("-fx-background-radius: 50%; -fx-background-color: transparent;");
+
 
         Button compressButton = new Button("Compress");
         compressButton.setStyle("-fx-background-color: navy; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 8;");
@@ -45,12 +52,16 @@ public class LZWCompressionGUI extends Application {
         Text completed = new Text("");
         completed.setStyle("-fx-font-size: 17px;");
 
+        HBox BackBox = new HBox(10);
+        BackBox.getChildren().addAll(backBtn);
+        BackBox.setAlignment(Pos.TOP_LEFT);
+
         HBox hbox = new HBox(10);
         hbox.getChildren().addAll(selectedFilePathField, selectFileButton);
         hbox.setAlignment(Pos.CENTER);
 
         VBox vbox = new VBox(10);
-        vbox.getChildren().addAll(headerLabel,instructionsText, hbox, compressButton, completed);
+        vbox.getChildren().addAll(BackBox, headerLabel,instructionsText, hbox, compressButton, completed);
         vbox.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(vbox, 700, 400);
@@ -75,6 +86,13 @@ public class LZWCompressionGUI extends Application {
                     completed.setText("Compression failed.");
                 }
             }
+        });
+
+        backBtn.setOnAction(e -> {
+            // Switch to the compression screen
+            LZWCompressionMain mainGUI = new LZWCompressionMain();
+            mainGUI.start(new Stage());
+            primaryStage.close();
         });
 
         primaryStage.show();
@@ -104,8 +122,8 @@ public class LZWCompressionGUI extends Application {
         return true;
     }
 
-    private Button createIconButton(int width, int height) {
-        File file = new File("C:\\Users\\PC\\Desktop\\Lzw_Compression_Algorithm\\folder.png");
+    private Button createIconButton(int width, int height, String filename) {
+        File file = new File(filename);
         String localUrl = file.toURI().toString();
 
         ImageView icon = new ImageView(new Image(localUrl));
@@ -113,7 +131,6 @@ public class LZWCompressionGUI extends Application {
         icon.setFitHeight(height);
 
         Button button = new Button();
-        button.setStyle("-fx-background-radius: 50%; -fx-background-color: transparent;");
         button.setGraphic(icon);
 
         return button;

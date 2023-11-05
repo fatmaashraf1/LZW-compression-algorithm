@@ -10,18 +10,19 @@ import javafx.scene.*;
 public class LZWCompressionMain extends Application {
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("LZW Compression");
+        primaryStage.setTitle("LZW Algorithm");
 
-        Label headerLabel = new Label("Welcome to LZW Compression Algorithm!");
-        headerLabel.setStyle("-fx-font-family: 'Comic Sans MS';-fx-font-weight: bold; -fx-font-size: 30px; -fx-padding: 20 0 30 0; -fx-letter-spacing:4px;");
+        Label headerLabel = new Label("Welcome to LZW Algorithm!");
+        headerLabel.setStyle("-fx-font-family: 'Comic Sans MS';-fx-font-weight: bold; -fx-font-size: 30px; -fx-padding: 20 0 30 0;");
 
-        Button compressButton = new Button("Compress");
-        Button decompressButton = new Button("Decompress");
+        Button compressButton = new Button("Compression");
+        Button decompressButton = new Button("Decompression");
 
         compressButton.setStyle("-fx-background-color: navy; -fx-text-fill: white; -fx-font-size: 19px; -fx-background-radius: 8;");
         decompressButton.setStyle("-fx-background-color: navy; -fx-text-fill: white; -fx-font-size: 19px; -fx-background-radius: 8;");
         decompressButton.setCursor(Cursor.HAND);
         compressButton.setCursor(Cursor.HAND);
+
 
         VBox vbox = new VBox(10);
         vbox.getChildren().addAll(headerLabel, compressButton, decompressButton);
@@ -35,14 +36,14 @@ public class LZWCompressionMain extends Application {
             // Switch to the compression screen
             LZWCompressionGUI compressionGUI = new LZWCompressionGUI();
             compressionGUI.start(new Stage());
-            primaryStage.close(); // Close the choice screen
+            primaryStage.close();
         });
 
         decompressButton.setOnAction(e -> {
             // Switch to the decompression screen
             LZWDecompressionGUI decompressionGUI = new LZWDecompressionGUI();
             decompressionGUI.start(new Stage());
-            primaryStage.close(); // Close the choice screen
+            primaryStage.close();
         });
 
         primaryStage.show();
