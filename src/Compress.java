@@ -82,12 +82,22 @@ class Compress {
         }
     }
 
+    /*Description:
+     *   This function for user interaction
+     *   It gives the local variable (filePath) the compressed file
+     *   the user calls Decompress function that reads from a file
+     *   calls the decompression function and writes the data to a file
+    */
     public void Decompress(String filePath) throws IOException {
         this.filePath = filePath;
         Decompression();
         saveDeCompressedFile();
     }
 
+    /*Description:
+     *   Read data from a file using FileReader
+     *   Decompress the file using LZW decompression algorithm
+     */
     public void Decompression() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(this.filePath));
         String line;
@@ -143,14 +153,19 @@ class Compress {
                 }
                 code_found = false;
             }
+            /* if the code of a pattern not found in the dictionary
+             * then take the previous pattern + the first character of that pattern as the new pattern
+             */
             if (!code_found) {
                 String temp_str = patterns.get(counter);
                 decompressed += temp_str + temp_str.charAt(0);
                 dictionary.put(temp_str + temp_str.charAt(0), dictionarySize++);
+                /*add that pattern to the list*/
                 patterns.add(temp_str + temp_str.charAt(0));
             }
             counter++;
         }
+        /*save the decompressed string*/
         decompressed_code = decompressed;
 
     }
