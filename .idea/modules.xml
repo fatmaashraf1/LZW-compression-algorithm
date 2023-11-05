@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LZW-compression-algorithm.iml" filepath="$PROJECT_DIR$/LZW-compression-algorithm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lzw_Compression_Algorithm.iml" filepath="$PROJECT_DIR$/Lzw_Compression_Algorithm.iml" />
     </modules>
   </component>
 </project>
