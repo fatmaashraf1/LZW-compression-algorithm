@@ -1,20 +1,21 @@
 import java.io.*;
+import java.sql.Array;
 import java.sql.ClientInfoStatus;
 import java.util.*;
 
 class LZW {
     String filePath;
     String data;
-    List<Integer> compressedCode;
+    ArrayList<Integer> compressedCode;
     String decompressed_code;
 
     public void Compress(String filePath){
         this.filePath = filePath;
         readFromFile();
-        compression();
+        Compression();
         saveCompressedFile();
     }
-    public void compression(){
+    public void Compression(){
         /*number of ASCII symbols*/
         int dictionarySize = 128;
 
@@ -27,7 +28,6 @@ class LZW {
 
         String pattern = "";
         compressedCode = new ArrayList<>();
-
         for (char character: this.data.toCharArray() ) {
             String newPattern = pattern + character;
             if (dictionary.containsKey(newPattern)) {
@@ -41,20 +41,25 @@ class LZW {
         if (!pattern.isEmpty())
             compressedCode.add(dictionary.get(pattern));
     }
+    public ArrayList <Integer> readBinary(String filename) {
+        ArrayList<Integer> text = new ArrayList<>();
+        try (FileInputStream fis = new FileInputStream(filename)) {
+            int content;
+            while ((content = fis.read()) != -1) {
+                text.add(content);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return text;
+    }
 
     public void saveCompressedFile() {
-
         try (FileOutputStream  fileWriter = new FileOutputStream ("CompressedFile.bin"))
         {
-            String content = "";
             for (Integer number : this.compressedCode) {
-                content = String.valueOf(number)+'\n';
-                fileWriter.write(content.getBytes());
-
+                fileWriter.write((char) number.intValue());
             }
-
-//            System.out.println(content);
-
             System.out.println("Compressed data saved to CompressedFile successfully");
         }
         catch (IOException e) {
@@ -69,7 +74,7 @@ class LZW {
             StringBuilder str = new StringBuilder();
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                str.append(line+'\n');
+                str.append(line).append('\n');
             }
             data = str.toString();
         } catch (IOException e) {
@@ -78,8 +83,7 @@ class LZW {
     }
 
     public void saveDeCompressedFile() {
-        try (FileWriter fileWriter = new FileWriter("DecompressedFile.txt");
-             PrintWriter printWriter = new PrintWriter(fileWriter)) {
+        try (FileWriter fileWriter = new FileWriter("DecompressedFile.txt")) {
             fileWriter.write(decompressed_code);
             System.out.println("Decompressed data saved to DecompressedFile successfully");
         } catch (IOException e) {
@@ -95,6 +99,7 @@ class LZW {
      */
     public void Decompress(String filePath) throws IOException {
         this.filePath = filePath;
+        this.compressedCode = readBinary(filePath);
         Decompression();
         saveDeCompressedFile();
     }
@@ -104,8 +109,8 @@ class LZW {
      *   Decompress the file using LZW decompression algorithm
      */
     public void Decompression() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(this.filePath));
-        String line;
+
+        int line;
         String decompressed = "";
         List<String> patterns = new ArrayList<String>();
 
@@ -119,14 +124,13 @@ class LZW {
             dictionary.put(String.valueOf((char) i), i);
         }
 
-        int content;
         int code;
-        /*read the first line in the compressed file and decompress it*/
-        line = reader.readLine();
-        /*turn the index value of the first line to character*/
-        code = Integer.parseInt(line);
+        /*read the first number in the compressed codes and decompress it*/
+        line = compressedCode.get(0);
+
         /*add the decompressed char to decompressed variable*/
-        decompressed += (char) (code);
+        decompressed += (char) (line);
+
         /*save the decompressed patterns */
         patterns.add(decompressed);
         /*
@@ -137,8 +141,8 @@ class LZW {
         boolean code_found = false;
 
         /*read a line from the compressed file*/
-        while ((line = reader.readLine()) != null) {
-            code = Integer.parseInt(line);
+        for (int i =1; i<compressedCode.size();++i) {
+            code = compressedCode.get(i);
             /*
              * search for the code in the dictionary
              * if it exists add it to decompressed string
