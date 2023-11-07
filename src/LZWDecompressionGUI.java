@@ -24,7 +24,7 @@ public class LZWDecompressionGUI extends Application {
         primaryStage.setTitle("Decompress Files");
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.bin"));
 
         // Back btn
         Button backBtn = createIconButton(48, 58, "back.png");

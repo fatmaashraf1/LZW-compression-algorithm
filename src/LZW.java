@@ -8,14 +8,13 @@ class LZW {
     List<Integer> compressedCode;
     String decompressed_code;
 
-
     public void Compress(String filePath){
         this.filePath = filePath;
         readFromFile();
-        Compression();
+        compression();
         saveCompressedFile();
     }
-    public void Compression(){
+    public void compression(){
         /*number of ASCII symbols*/
         int dictionarySize = 128;
 
@@ -44,14 +43,22 @@ class LZW {
     }
 
     public void saveCompressedFile() {
-        try (FileWriter fileWriter = new FileWriter("CompressedFile.txt");
-             PrintWriter printWriter = new PrintWriter(fileWriter)) {
+
+        try (FileOutputStream  fileWriter = new FileOutputStream ("CompressedFile.bin"))
+        {
+            String content = "";
             for (Integer number : this.compressedCode) {
-                printWriter.println(number);
+                content = String.valueOf(number)+'\n';
+                fileWriter.write(content.getBytes());
+
             }
+
+//            System.out.println(content);
+
             System.out.println("Compressed data saved to CompressedFile successfully");
-        } catch (IOException e) {
-            System.out.println("An error occurred while saving the list to CompressedFile");
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -62,7 +69,7 @@ class LZW {
             StringBuilder str = new StringBuilder();
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                str.append(line);
+                str.append(line+'\n');
             }
             data = str.toString();
         } catch (IOException e) {
@@ -112,6 +119,7 @@ class LZW {
             dictionary.put(String.valueOf((char) i), i);
         }
 
+        int content;
         int code;
         /*read the first line in the compressed file and decompress it*/
         line = reader.readLine();
